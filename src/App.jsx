@@ -97,6 +97,7 @@ const App = () => {
         errorMsg = validate(name, value, selectedFile.size, selectedFile.type);
         if (!errorMsg) {
           currentObj.value = selectedFile;
+          currentObj.imageName = selectedFile.name;
           const reader = new FileReader();
           reader.readAsDataURL(selectedFile);
           reader.onloadend = () => {
@@ -126,9 +127,12 @@ const App = () => {
 
     // setting the value in the dataObj and Checking for the error
     clonedData.map((item) => {
-      item.name !== "image"
-        ? (dataObj[item.name] = item.value)
-        : (dataObj[item.name] = imagePreview);
+      if (item.name !== "image") {
+        dataObj[item.name] = item.value;
+      } else {
+        dataObj[item.name] = imagePreview;
+        dataObj["imageName"] = item.imageName;
+      }
       const errorMsg = validate(item.name, item.value);
       item.errorMsg = errorMsg;
       if (errorMsg) isValid = false;
@@ -140,6 +144,7 @@ const App = () => {
       clonedData.map((item) => {
         item.value = "";
         item.errorMsg = "";
+        item.imageName = "";
       });
       setImagePreview("");
 
@@ -178,6 +183,7 @@ const App = () => {
 
     // setting the loading to false..
     getServerData();
+    setIsLoading(false);
   };
 
   // function to edit the data
@@ -190,7 +196,11 @@ const App = () => {
     const clonedData = JSON.parse(JSON.stringify(data));
     clonedData.map((item) => {
       item.value = editableObj[item.name];
+      if (item.name === "image") {
+        item.imageValue = editableObj["imageName"];
+      }
     });
+
     setData(clonedData);
     setImagePreview(editableObj.image);
     setEditData(editableObj);
@@ -211,15 +221,7 @@ const App = () => {
     }
     getServerData();
   };
-
-  const onCancelButtonClick = () => {
-    const clonedData = JSON.parse(JSON.stringify(data));
-    clonedData.forEach((obj) => {
-      obj.value = "";
-    });
-    setData(clonedData);
-  };
-
+  console.log("serverData -->", serverData);
   return (
     <>
       <Header />

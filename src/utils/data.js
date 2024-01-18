@@ -54,5 +54,6 @@ export const data = [
     type: "file",
     value: "",
     errorMsg: "",
+    imageName: "",
   },
 ];
