@@ -1,4 +1,4 @@
-const baseUrl = "https://registration-form-two-steel.vercel.app/";
+const baseUrl = "https://registration-form-server-wine.vercel.app/";
 export const registerUser = async (data) => {
   try {
     const response = await fetch(baseUrl + "users/create-user", {
